@@ -2,7 +2,7 @@
 // @name                steam消费总额查看
 // @name:en             steam total spending
 // @namespace           http://tampermonkey.net/
-// @version             1.0.0
+// @version             1.1.0
 // @description         一键查看steam消费总额
 // @description:en      Used to view the total spending of steam consumption
 // @author              super pufferFish
@@ -77,7 +77,7 @@
     let lessSpend = 0
     let addSpend = 0
     const evenWhtTotal = document.querySelectorAll('.wallet_table_row .wht_total')
-    const dot = evenWhtTotal[0].innerText.replace(/\d+/, '').trim()
+    const dot = evenWhtTotal[0].innerText.replace(/[\d\.]+/, '').trim()
     const rep = new RegExp(dot)
     evenWhtTotal.forEach((item) => {
       let doll = Number(item.innerText.replace(rep, '').trim())
