@@ -2,7 +2,7 @@
 // @name                steam消费总额查看
 // @name:en             steam total spending
 // @namespace           http://tampermonkey.net/
-// @version             1.1.0
+// @version             1.1.1
 // @description         一键查看steam消费总额
 // @description:en      Used to view the total spending of steam consumption
 // @author              super pufferFish
@@ -57,7 +57,7 @@
     }
   }
 
-  function onTotalSpending () {
+  function onTotalSpending() {
     const haveLoadMore = document.getElementById('load_more_button')
     this.innerText = 'loading...'
     if (haveLoadMore && haveLoadMore.style.display !== 'none') {
@@ -72,15 +72,21 @@
     window.alert(`${ob.choose('total')}${all}\n${ob.choose('buy')}${add}\n${ob.choose('refund')}${less}`)
   }
 
-  function addSpending () {
+  function addSpending() {
     let numAll = 0
     let lessSpend = 0
     let addSpend = 0
-    const evenWhtTotal = document.querySelectorAll('.wallet_table_row .wht_total')
+    const evenWhtTotal = document.querySelectorAll('tbody .wht_total')
     const dot = evenWhtTotal[0].innerText.replace(/[\d\.]+/, '').trim()
     const rep = new RegExp(dot)
     evenWhtTotal.forEach((item) => {
-      let doll = Number(item.innerText.replace(rep, '').trim())
+      let doll = +item.innerText.replace(rep, '').trim()
+      if (window.isNaN(doll)) {
+        try {
+          doll = +item.children[0].innerText.replace(rep, '').trim()
+        } catch { }
+      }
+
       if (doll) {
         if (item.className.indexOf('wht_refunded') >= 0) {
           numAll -= doll
@@ -98,7 +104,7 @@
     }
   }
 
-  function floorMath (num) {
+  function floorMath(num) {
     return Math.floor(num * 100) / 100
   }
 })()
