@@ -2,7 +2,7 @@
 // @name                steam消费总额查看
 // @name:en             steam total spending
 // @namespace           http://tampermonkey.net/
-// @version             1.1.1
+// @version             1.2.0
 // @description         一键查看steam消费总额
 // @description:en      Used to view the total spending of steam consumption
 // @author              super pufferFish
@@ -77,15 +77,10 @@
     let lessSpend = 0
     let addSpend = 0
     const evenWhtTotal = document.querySelectorAll('tbody .wht_total')
-    const dot = evenWhtTotal[0].innerText.replace(/[\d\.]+/, '').trim()
+    const dot = evenWhtTotal[0].innerText.replace(/(?<=\W)[\w\W]+/, '').trim()
     const rep = new RegExp(dot)
     evenWhtTotal.forEach((item) => {
-      let doll = +item.innerText.replace(rep, '').trim()
-      if (window.isNaN(doll)) {
-        try {
-          doll = +item.children[0].innerText.replace(rep, '').trim()
-        } catch { }
-      }
+      let doll = +item.innerText.match(/[\d\.]+/)[0]
 
       if (doll) {
         if (item.className.indexOf('wht_refunded') >= 0) {
