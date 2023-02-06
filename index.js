@@ -2,10 +2,10 @@
 // @name                steam消费总额查看
 // @name:en             steam total spending
 // @namespace           http://tampermonkey.net/
-// @version             1.3.0
+// @version             1.3.1
 // @description         一键查看steam消费总额
 // @description:en      Used to view the total spending of steam consumption
-// @author              super pufferFish
+// @author              liuyubing
 // @match               *://steamcommunity.com/*
 // @match               *://store.steampowered.com/*
 // @match               *://help.steampowered.com/*
@@ -65,8 +65,6 @@ const domC = (name, attrObjs) => {
       style: "vertical-align: top;margin-right: 12px;",
       innerText: ob.choose("hrefText"),
     });
-  console.log(globalActions, globalActionMenu, toAccountHistory)
-
     globalActions.insertBefore(toAccountHistory, globalActionMenu);
   }
 
@@ -101,19 +99,17 @@ const domC = (name, attrObjs) => {
     let numAll = 0;
     let lessSpend = 0;
     let addSpend = 0;
-    const evenWhtTotal = document.querySelectorAll("tbody .wht_total");
-    const dot = evenWhtTotal[0].innerText.replace(/(?<=\W)[\w\W]+/, "").trim();
-    evenWhtTotal.forEach((item) => {
+    const nodesTotal = domA("tbody .wht_total");
+    const dot = nodesTotal[0].innerText.replace(/(?<=\W)[\w\W]+/, "").trim();
+    nodesTotal.forEach((item) => {
       let doll = +item.innerText.match(/[\d\.]+/)[0];
-
-      if (doll) {
-        if (item.className.indexOf("wht_refunded") >= 0) {
-          numAll -= doll;
-          lessSpend += doll;
-        } else {
-          numAll += doll;
-          addSpend += doll;
-        }
+      if (!doll) return;
+      if (item.className.indexOf("wht_refunded") >= 0) {
+        numAll -= doll;
+        lessSpend += doll;
+      } else {
+        numAll += doll;
+        addSpend += doll;
       }
     });
     return {
